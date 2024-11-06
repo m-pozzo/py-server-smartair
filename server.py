@@ -3,7 +3,9 @@ import mediapipe as mp
 import asyncio
 import websockets
 import json
+import os
 
+PORT = int(os.getenv("PORT", 4001))
 # Configuración de MediaPipe para detección de manos
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(
@@ -64,8 +66,8 @@ async def enviar_dedos(websocket):
             detener = True
 
 async def main():
-    async with websockets.serve(enviar_dedos, "localhost", 4001):
-        print("Servidor WebSocket iniciado en ws://localhost:4001")
+    async with websockets.serve(enviar_dedos, "0.0.0.0", PORT):
+        print(f"Servidor WebSocket iniciado en ws://0.0.0.0:{PORT}")
         await asyncio.Future()  # Mantener el servidor corriendo
 
 asyncio.run(main())
